@@ -20,7 +20,7 @@ class ClassController extends Controller
         $classes = SchoolClass::with('homeroomTeacher')
             ->where('archived', false)
             ->latest('class_id')
-            ->paginate(10);
+            ->get();
 
         return view('classes.index', compact('classes'));
     }

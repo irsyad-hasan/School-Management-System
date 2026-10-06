@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
-@section('title', 'Mata Pelajaran (Subjects)')
+@section('title', 'Mata Pelajaran')
 
-@section('page-title', 'Mata Pelajaran (Subjects)')
+@section('page-title', 'Mata Pelajaran')
 
-@section('breadcrumb', 'Mata Pelajaran (Subjects)')
+@section('breadcrumb', 'Mata Pelajaran')
 
 @section('content')
 
@@ -12,7 +12,7 @@
 
         <div class="card-header">
             <h3 class="card-title">
-                Daftar Mata Pelajaran (Subject List)
+                Daftar Mata Pelajaran
             </h3>
 
             <div class="card-tools">
@@ -25,17 +25,17 @@
             </div>
         </div>
 
-        <div class="card-body table-responsive p-0">
-            <table class="table table-hover align-middle mb-0">
+        <div class="card-body datatable-container">
+            <table id="subjectsTable" class="display table table-hover align-middle mb-0">
 
                 <thead>
                     <tr>
                         <th style="width: 60px;">No.</th>
-                        <th>Nama Mata Pelajaran (Subject Name)</th>
-                        <th>Kode (Subject Code)</th>
-                        <th class="text-end">SKS (Credits)</th>
+                        <th>Nama Mata Pelajaran</th>
+                        <th>Kode</th>
+                        <th class="text-end">Jam Pelajaran (JP)</th>
                         <th style="width: 180px;" class="text-end">
-                            Aksi (Actions)
+                            Detail (Detail)
                         </th>
                     </tr>
                 </thead>
@@ -44,7 +44,7 @@
                     @forelse ($subjects as $subject)
                         <tr>
                             <td>
-                                {{ $subjects->firstItem() + $loop->index }}
+                                {{ $loop->iteration }}
                             </td>
 
                             <td>
@@ -56,7 +56,7 @@
                             </td>
 
                             <td class="text-end">
-                                {{ number_format($subject->credits, 0, ',', '.') }}
+                                {{ number_format($subject->jp, 0, ',', '.') }}
                             </td>
 
                             <td class="text-end">
@@ -68,7 +68,7 @@
 
                                 @if (auth()->user()->role === 'admin')
                                     <a href="{{ route('subjects.edit', $subject) }}" class="btn btn-warning btn-sm"
-                                        title="Edit Mata Pelajaran">
+                                        title="Ubah Mata Pelajaran">
                                         <i class="bi bi-pencil"></i>
                                     </a>
 
@@ -98,12 +98,13 @@
             </table>
         </div>
 
-        @if ($subjects->hasPages())
-            <div class="card-footer">
-                {{ $subjects->links() }}
-            </div>
-        @endif
-
     </div>
 
 @endsection
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initDataTable('#subjectsTable');
+        });
+    </script>
+@endpush

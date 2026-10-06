@@ -1,7 +1,7 @@
 <section>
 
     <div class="mb-4">
-        <h5 class="mb-1">Update Password</h5>
+        <h5 class="mb-1">Perbarui Kata Sandi</h5>
         <p class="text-muted mb-0">
             Use a strong password to keep your account secure.
         </p>
@@ -62,7 +62,7 @@
         <div class="d-flex align-items-center gap-2">
             <button type="submit" class="btn btn-primary">
                 <i class="bi bi-key me-1"></i>
-                Update Password
+                Perbarui Kata Sandi
             </button>
 
             @if (session('status') === 'password-updated')

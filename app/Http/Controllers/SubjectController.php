@@ -17,7 +17,7 @@ class SubjectController extends Controller
     {
         $subjects = Subject::where('archived', false)
             ->latest('subject_id')
-            ->paginate(10);
+            ->get();
 
         return view('subjects.index', compact('subjects'));
     }
@@ -47,7 +47,7 @@ class SubjectController extends Controller
                 'max:20',
                 'unique:tbl_subjects,subject_code',
             ],
-            'credits' => [
+            'jp' => [
                 'required',
                 'integer',
                 'min:1',
@@ -58,7 +58,7 @@ class SubjectController extends Controller
         $subject = Subject::create([
             'subject_name' => $validated['subject_name'],
             'subject_code' => $validated['subject_code'],
-            'credits' => $validated['credits'],
+            'jp' => $validated['jp'],
             'archived' => false,
         ]);
 
@@ -114,7 +114,7 @@ class SubjectController extends Controller
                 'max:20',
                 'unique:tbl_subjects,subject_code,' . $subject->subject_id . ',subject_id',
             ],
-            'credits' => [
+            'jp' => [
                 'required',
                 'integer',
                 'min:1',
@@ -125,7 +125,7 @@ class SubjectController extends Controller
         $subject->update([
             'subject_name' => $validated['subject_name'],
             'subject_code' => $validated['subject_code'],
-            'credits' => $validated['credits'],
+            'jp' => $validated['jp'],
         ]);
 
         return redirect()

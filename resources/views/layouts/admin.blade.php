@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@yield('title', 'Dashboard') - School Management System</title>
+    <title>@yield('title', 'Dashboard') - Rungsek</title>
+    <link href="https://cdn.datatables.net/v/dt/dt-3.1.3/datatables.min.css" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -41,7 +42,7 @@
                             <li>
                                 <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                     <i class="bi bi-person me-2"></i>
-                                    Profile
+                                    Profil
                                 </a>
                             </li>
 
@@ -55,7 +56,7 @@
 
                                     <button type="submit" class="dropdown-item">
                                         <i class="bi bi-box-arrow-right me-2"></i>
-                                        Logout
+                                        Keluar
                                     </button>
                                 </form>
                             </li>
@@ -73,7 +74,7 @@
             <div class="sidebar-brand">
                 <a href="{{ route('dashboard') }}" class="brand-link">
                     <span class="brand-text fw-bold">
-                        EDUDASH
+                        RUNGSEK
                     </span>
                 </a>
             </div>
@@ -93,7 +94,7 @@
                             </a>
                         </li>
 
-                        {{-- Students --}}
+                        {{-- Siswa --}}
                         @if (in_array(auth()->user()->role, ['admin', 'teacher']))
                             <li class="nav-item">
                                 <a href="{{ route('students.index') }}"
@@ -104,7 +105,7 @@
                             </li>
                         @endif
 
-                        {{-- My Student Data --}}
+                        {{-- Data Siswa Saya --}}
                         @if (auth()->user()->role === 'student')
                             <li class="nav-item">
                                 <a href="{{ route('students.index') }}"
@@ -126,7 +127,7 @@
                             </li>
                         @endif
 
-                        {{-- Classes --}}
+                        {{-- Kelases --}}
                         @if (in_array(auth()->user()->role, ['admin', 'teacher']))
                             <li class="nav-item">
                                 <a href="{{ route('classes.index') }}"
@@ -148,7 +149,18 @@
                             </li>
                         @endif
 
-                        {{-- Profile --}}
+                        {{-- Log Aktivitas --}}
+                        @if (auth()->user()->role === 'admin')
+                            <li class="nav-item">
+                                <a href="{{ route('activity-logs.index') }}"
+                                    class="nav-link {{ request()->routeIs('activity-logs.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-clock-history"></i>
+                                    <p>Log Aktivitas</p>
+                                </a>
+                            </li>
+                        @endif
+
+                        {{-- Profil --}}
                         <li class="nav-item">
                             <a href="{{ route('profile.edit') }}"
                                 class="nav-link {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
@@ -176,11 +188,13 @@
 
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('dashboard') }}">
-                                        Home
-                                    </a>
-                                </li>
+                                @if (!request()->routeIs('dashboard'))
+                                    <li class="breadcrumb-item">
+                                        <a href="{{ route('dashboard') }}">
+                                            Dashboard
+                                        </a>
+                                    </li>
+                                @endif
 
                                 @hasSection('breadcrumb-parent')
                                     <li class="breadcrumb-item">
@@ -225,7 +239,7 @@
 
                     @if ($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Please fix the following errors:</strong>
+                            <strong>Silakan perbaiki kesalahan berikut:</strong>
 
                             <ul class="mb-0 mt-2">
                                 @foreach ($errors->all() as $error)
@@ -247,17 +261,52 @@
         {{-- Footer --}}
         <footer class="app-footer">
             <div class="float-end d-none d-sm-inline">
-                School Management System
+                Rungsek
             </div>
 
             <strong>
-                &copy; {{ date('Y') }} School Management System.
+                &copy; {{ date('Y') }} Rungsek.
             </strong>
-            All rights reserved.
+            Hak cipta dilindungi.
         </footer>
 
     </div>
 
+    <script src="https://cdn.datatables.net/v/dt/dt-3.1.3/datatables.min.js"></script>
+    <script>
+        window.initDataTable = function (selector, options = {}) {
+            const table = document.querySelector(selector);
+            if (!table || typeof DataTable === 'undefined') return null;
+            if (DataTable.isDataTable && DataTable.isDataTable(table)) return null;
+
+            return new DataTable(table, Object.assign({
+                pageLength: 10,
+                order: [],
+                autoWidth: false,
+                layout: {
+                    topStart: 'pageLength',
+                    topEnd: 'search',
+                    bottomStart: 'info',
+                    bottomEnd: 'paging'
+                },
+                language: {
+                    search: 'Cari:',
+                    searchPlaceholder: 'Cari data...',
+                    lengthMenu: 'Tampilkan _MENU_ data',
+                    info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ data',
+                    infoEmpty: 'Tidak ada data',
+                    zeroRecords: 'Data tidak ditemukan',
+                    emptyTable: 'Belum ada data.',
+                    paginate: {
+                        first: 'Pertama',
+                        last: 'Terakhir',
+                        next: 'Berikutnya',
+                        previous: 'Sebelumnya'
+                    }
+                }
+            }, options));
+        };
+    </script>
     @stack('scripts')
 </body>
 

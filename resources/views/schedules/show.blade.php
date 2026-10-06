@@ -1,0 +1,5 @@
+@extends('layouts.admin')
+@section('title','Detail Jadwal')
+@section('page-title','Detail Jadwal')
+@section('breadcrumb',$schedule->subject->subject_name ?? 'Jadwal')
+@section('content')<div class="card shadow-sm"><div class="card-body"><dl class="row mb-0"><dt class="col-sm-3">Hari</dt><dd class="col-sm-9">{{ $schedule->day }}</dd><dt class="col-sm-3">Jam</dt><dd class="col-sm-9">{{ substr($schedule->start_time,0,5) }} - {{ substr($schedule->end_time,0,5) }}</dd><dt class="col-sm-3">Kelas</dt><dd class="col-sm-9">{{ $schedule->schoolClass->class_name ?? '-' }}</dd><dt class="col-sm-3">Mata Pelajaran</dt><dd class="col-sm-9">{{ $schedule->subject->subject_name ?? '-' }}</dd><dt class="col-sm-3">Guru</dt><dd class="col-sm-9">{{ $schedule->teacher->full_name ?? '-' }}</dd><dt class="col-sm-3">JP</dt><dd class="col-sm-9">{{ $schedule->jp }}</dd></dl></div><div class="card-footer"><a href="{{ route('schedules.index') }}" class="btn btn-secondary">Kembali</a>@if(auth()->user()->role==='admin') <a href="{{ route('schedules.edit',$schedule) }}" class="btn btn-warning">Ubah</a>@endif</div></div>@endsection

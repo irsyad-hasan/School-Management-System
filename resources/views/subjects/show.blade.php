@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Detail Mata Pelajaran (Subject Details)')
+@section('title', 'Detail Mata Pelajaran')
 
-@section('page-title', 'Detail Mata Pelajaran (Subject Details)')
+@section('page-title', 'Detail Mata Pelajaran')
 
 @section('breadcrumb-parent')
-    <a href="{{ route('subjects.index') }}">Mata Pelajaran (Subjects)</a>
+    <a href="{{ route('subjects.index') }}">Mata Pelajaran</a>
 @endsection
 
 @section('breadcrumb', $subject->subject_name)
@@ -15,34 +15,34 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
-                Informasi Mata Pelajaran (Subject Information)
+                Informasi Mata Pelajaran
             </h3>
         </div>
 
         <div class="card-body">
             <div class="row">
 
-                {{-- Subject Name --}}
+                {{-- Mata Pelajaran Name --}}
                 <div class="col-md-6 mb-3">
-                    <strong>Nama Mata Pelajaran (Subject Name)</strong>
+                    <strong>Nama Mata Pelajaran</strong>
                     <p class="mb-0">
                         {{ $subject->subject_name }}
                     </p>
                 </div>
 
-                {{-- Subject Code --}}
+                {{-- Mata Pelajaran Code --}}
                 <div class="col-md-6 mb-3">
-                    <strong>Kode Mata Pelajaran (Subject Code)</strong>
+                    <strong>Kode Mata Pelajaran</strong>
                     <p class="mb-0">
                         {{ $subject->subject_code }}
                     </p>
                 </div>
 
-                {{-- Credits --}}
+                {{-- JP --}}
                 <div class="col-md-6 mb-3">
-                    <strong>SKS (Credits)</strong>
+                    <strong>Jam Pelajaran (JP)</strong>
                     <p class="mb-0">
-                        {{ number_format($subject->credits, 0, ',', '.') }}
+                        {{ number_format($subject->jp, 0, ',', '.') }}
                     </p>
                 </div>
 
@@ -53,13 +53,13 @@
 
             <a href="{{ route('subjects.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left me-1"></i>
-                Kembali (Back)
+                Kembali
             </a>
 
             @if (auth()->user()->role === 'admin')
                 <a href="{{ route('subjects.edit', $subject) }}" class="btn btn-warning">
                     <i class="bi bi-pencil me-1"></i>
-                    Edit Mata Pelajaran (Edit Subject)
+                    Ubah Mata Pelajaran (Ubah Mata Pelajaran)
                 </a>
             @endif
 

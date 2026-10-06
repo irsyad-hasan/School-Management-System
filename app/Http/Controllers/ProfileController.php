@@ -38,21 +38,7 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->update([
-            'archived' => true,
-        ]);
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return Redirect::route('profile.edit')
+            ->with('error', 'Akun sendiri tidak dapat dihapus atau dinonaktifkan. Silakan hubungi administrator jika akun perlu dinonaktifkan.');
     }
 }

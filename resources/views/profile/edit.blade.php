@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Profile')
-@section('page-title', 'Profile')
-@section('breadcrumb', 'Profile')
+@section('title', 'Profil')
+@section('page-title', 'Profil')
+@section('breadcrumb', 'Profil')
 
 @section('content')
 
@@ -12,7 +12,7 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3 class="card-title">Profile Information</h3>
+                    <h3 class="card-title">Informasi Profil</h3>
                 </div>
 
                 <div class="card-body">
@@ -22,7 +22,7 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3 class="card-title">Update Password</h3>
+                    <h3 class="card-title">Perbarui Kata Sandi</h3>
                 </div>
 
                 <div class="card-body">
@@ -30,15 +30,6 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Archive Account</h3>
-                </div>
-
-                <div class="card-body">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
 
         </div>
 

@@ -1,20 +1,20 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Guru (Add Teacher)')
+@section('title', 'Tambah Guru')
 
-@section('page-title', 'Tambah Guru (Add Teacher)')
+@section('page-title', 'Tambah Guru')
 
 @section('breadcrumb-parent')
-    <a href="{{ route('teachers.index') }}">Guru (Teachers)</a>
+    <a href="{{ route('teachers.index') }}">Guru</a>
 @endsection
 
-@section('breadcrumb', 'Tambah Guru (Add Teacher)')
+@section('breadcrumb', 'Tambah Guru')
 
 @section('content')
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Informasi Guru (Teacher Information)</h3>
+            <h3 class="card-title">Informasi Guru</h3>
         </div>
 
         <form action="{{ route('teachers.store') }}" method="POST">
@@ -22,8 +22,8 @@
 
             <div class="card-body">
 
-                {{-- Account Information --}}
-                <h5 class="mb-3">Informasi Akun (Account Information)</h5>
+                {{-- Informasi Akun --}}
+                <h5 class="mb-3">Informasi Akun</h5>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -80,13 +80,13 @@
 
                 <hr>
 
-                {{-- Teacher Information --}}
-                <h5 class="mb-3">Informasi Guru (Teacher Information)</h5>
+                {{-- Informasi Guru --}}
+                <h5 class="mb-3">Informasi Guru</h5>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="full_name" class="form-label">
-                            Nama Lengkap (Full Name) <span class="text-danger">*</span>
+                            Nama Lengkap <span class="text-danger">*</span>
                         </label>
 
                         <input type="text" name="full_name" id="full_name"
@@ -114,7 +114,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="subject_id" class="form-label">
-                            Mata Pelajaran (Subject) <span class="text-danger">*</span>
+                            Mata Pelajaran <span class="text-danger">*</span>
                         </label>
 
                         <select name="subject_id" id="subject_id"
@@ -139,12 +139,12 @@
             <div class="card-footer">
                 <a href="{{ route('teachers.index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left me-1"></i>
-                    Kembali (Back)
+                    Kembali
                 </a>
 
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-save me-1"></i>
-                    Simpan Guru (Save Teacher)
+                    Simpan Guru
                 </button>
             </div>
         </form>

@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
-@section('title', 'Kelas (Classes)')
+@section('title', 'Kelas')
 
-@section('page-title', 'Kelas (Classes)')
+@section('page-title', 'Kelas')
 
-@section('breadcrumb', 'Kelas (Classes)')
+@section('breadcrumb', 'Kelas')
 
 @section('content')
 
@@ -12,7 +12,7 @@
 
         <div class="card-header">
             <h3 class="card-title">
-                Daftar Kelas (Class List)
+                Daftar Kelas
             </h3>
 
             <div class="card-tools">
@@ -25,17 +25,17 @@
             </div>
         </div>
 
-        <div class="card-body table-responsive p-0">
-            <table class="table table-hover align-middle mb-0">
+        <div class="card-body datatable-container">
+            <table id="classesTable" class="display table table-hover align-middle mb-0">
 
                 <thead>
                     <tr>
                         <th style="width: 60px;">No.</th>
-                        <th>Nama Kelas (Class Name)</th>
-                        <th>Wali Kelas (Homeroom Teacher)</th>
-                        <th>Tahun Ajaran (Academic Year)</th>
+                        <th>Nama Kelas</th>
+                        <th>Wali Kelas</th>
+                        <th>Tahun Ajaran</th>
                         <th style="width: 180px;" class="text-end">
-                            Aksi (Actions)
+                            Detail
                         </th>
                     </tr>
                 </thead>
@@ -44,7 +44,7 @@
                     @forelse ($classes as $class)
                         <tr>
                             <td>
-                                {{ $classes->firstItem() + $loop->index }}
+                                {{ $loop->iteration }}
                             </td>
 
                             <td>
@@ -68,7 +68,7 @@
 
                                 @if (auth()->user()->role === 'admin')
                                     <a href="{{ route('classes.edit', $class) }}" class="btn btn-warning btn-sm"
-                                        title="Edit Kelas">
+                                        title="Ubah Kelas">
                                         <i class="bi bi-pencil"></i>
                                     </a>
 
@@ -97,12 +97,13 @@
             </table>
         </div>
 
-        @if ($classes->hasPages())
-            <div class="card-footer">
-                {{ $classes->links() }}
-            </div>
-        @endif
-
     </div>
 
 @endsection
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initDataTable('#classesTable');
+        });
+    </script>
+@endpush

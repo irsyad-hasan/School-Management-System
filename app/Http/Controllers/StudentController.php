@@ -36,7 +36,7 @@ class StudentController extends Controller
         $students = Student::with('schoolClass')
             ->where('archived', false)
             ->latest('student_id')
-            ->paginate(10);
+            ->get();
 
         return view('students.index', compact('students'));
     }

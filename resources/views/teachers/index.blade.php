@@ -1,17 +1,17 @@
 @extends('layouts.admin')
 
-@section('title', 'Guru (Teachers)')
+@section('title', 'Guru')
 
-@section('page-title', 'Guru (Teachers)')
+@section('page-title', 'Guru')
 
-@section('breadcrumb', 'Guru (Teachers)')
+@section('breadcrumb', 'Guru')
 
 @section('content')
 
     <div class="card">
 
         <div class="card-header">
-            <h3 class="card-title">Daftar Guru (Teacher List)</h3>
+            <h3 class="card-title">Daftar Guru</h3>
 
             <div class="card-tools">
                 @if (auth()->user()->role === 'admin')
@@ -23,17 +23,20 @@
             </div>
         </div>
 
-        <div class="card-body table-responsive p-0">
-            <table class="table table-hover align-middle mb-0">
+        <div class="card-body datatable-container">
+            <table id="teachersTable" class="display table table-hover align-middle mb-0">
 
                 <thead>
                     <tr>
                         <th style="width: 60px;">No.</th>
-                        <th>Nama Lengkap (Full Name)</th>
-                        <th class="text-end">NIP</th>
-                        <th>Mata Pelajaran (Subject)</th>
+                        <th>Nama Lengkap</th>
+                        @if (auth()->user()->role === 'admin')
+                            <th class="text-end">NIP</th>
+                        @endif
+                        <th>Mata Pelajaran</th>
+                        <th>Wali Kelas</th>
                         <th style="width: 180px;" class="text-end">
-                            Aksi (Actions)
+                            Detail
                         </th>
                     </tr>
                 </thead>
@@ -42,30 +45,42 @@
                     @forelse ($teachers as $teacher)
                         <tr>
                             <td>
-                                {{ $teachers->firstItem() + $loop->index }}
+                                {{ $loop->iteration }}
                             </td>
 
                             <td>
                                 {{ $teacher->full_name }}
                             </td>
 
-                            <td class="text-end">
-                                {{ $teacher->nip }}
-                            </td>
+                            @if (auth()->user()->role === 'admin')
+                                <td class="text-end">{{ $teacher->nip }}</td>
+                            @endif
 
                             <td>
                                 {{ $teacher->subject->subject_name ?? '-' }}
                             </td>
 
+                            <td>
+                                @if ($teacher->homeroomClasses->isNotEmpty())
+                                    <div class="d-flex flex-wrap gap-1">
+                                        @foreach ($teacher->homeroomClasses as $class)
+                                            <span class="badge text-bg-light border">{{ $class->class_name }}</span>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <span class="text-muted">Bukan wali kelas</span>
+                                @endif
+                            </td>
+
                             <td class="text-end">
                                 <a href="{{ route('teachers.show', $teacher) }}" class="btn btn-info btn-sm"
-                                    title="Lihat Guru">
+                                    title="Detail Guru">
                                     <i class="bi bi-eye"></i>
                                 </a>
 
                                 @if (auth()->user()->role === 'admin')
                                     <a href="{{ route('teachers.edit', $teacher) }}" class="btn btn-warning btn-sm"
-                                        title="Edit Guru">
+                                        title="Ubah Guru">
                                         <i class="bi bi-pencil"></i>
                                     </a>
 
@@ -83,7 +98,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center py-4">
+                            <td colspan="6" class="text-center py-4">
                                 Belum ada data guru.
                             </td>
                         </tr>
@@ -93,12 +108,13 @@
             </table>
         </div>
 
-        @if ($teachers->hasPages())
-            <div class="card-footer">
-                {{ $teachers->links() }}
-            </div>
-        @endif
-
     </div>
 
 @endsection
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initDataTable('#teachersTable');
+        });
+    </script>
+@endpush

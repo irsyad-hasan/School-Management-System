@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,26 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $user = Auth::user();
+
+        if ($user) {
+            ActivityLogger::record('login', 'Masuk ke dalam sistem.');
+        }
+
+        if ($user?->role === 'teacher') {
+            $teacherName = $user->teacher?->full_name ?? $user->username;
+            $isFirstLogin = $user->first_login_at === null;
+
+            if ($isFirstLogin) {
+                $user->forceFill(['first_login_at' => now()])->save();
+            }
+
+            $request->session()->put('teacher_greeting', [
+                'type' => $isFirstLogin ? 'new' : 'returning',
+                'name' => $teacherName,
+            ]);
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
@@ -36,6 +57,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        if (Auth::check()) {
+            ActivityLogger::record('logout', 'Keluar dari sistem.');
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

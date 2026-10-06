@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Siswa (Edit Student)')
+@section('title', 'Ubah Siswa')
 
-@section('page-title', 'Edit Siswa (Edit Student)')
+@section('page-title', 'Ubah Siswa')
 
 @section('breadcrumb-parent')
-    <a href="{{ route('students.index') }}">Students</a>
+    <a href="{{ route('students.index') }}">Siswa</a>
 @endsection
 
 @section('breadcrumb', $student->full_name)
@@ -14,7 +14,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Edit Informasi Siswa (Edit Student Information)</h3>
+            <h3 class="card-title">Ubah Informasi Siswa (Ubah Siswa Information)</h3>
         </div>
 
         <form action="{{ route('students.update', $student) }}" method="POST">
@@ -26,7 +26,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="full_name" class="form-label">
-                            Nama Lengkap (Full Name) <span class="text-danger">*</span>
+                            Nama Lengkap <span class="text-danger">*</span>
                         </label>
                         <input type="text" name="full_name" id="full_name" class="form-control"
                             value="{{ old('full_name', $student->full_name) }}" placeholder="Enter full name" autofocus
@@ -45,11 +45,11 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="class_id" class="form-label">
-                            Kelas (Class) <span class="text-danger">*</span>
+                            Kelas <span class="text-danger">*</span>
                         </label>
 
                         <select name="class_id" id="class_id" class="form-select" required>
-                            <option value="">-- Select Class --</option>
+                            <option value="">-- Select Kelas --</option>
 
                             @foreach ($classes as $class)
                                 <option value="{{ $class->class_id }}"
@@ -62,7 +62,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="date_of_birth" class="form-label">
-                            Tanggal Lahir (Date of Birth) <span class="text-danger">*</span>
+                            Tanggal Lahir (Tanggal Lahir) <span class="text-danger">*</span>
                         </label>
 
                         <input type="date" name="date_of_birth" id="date_of_birth" class="form-control"
@@ -72,7 +72,7 @@
 
                 <hr>
 
-                <h5 class="mb-3">Akun Login (Login Account)</h5>
+                <h5 class="mb-3">Akun Login</h5>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -124,12 +124,12 @@
             <div class="card-footer">
                 <a href="{{ route('students.index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i>
-                    Kembali (Back)
+                    Kembali
                 </a>
 
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-save"></i>
-                    Perbarui Siswa (Update Student)
+                    Perbarui Siswa
                 </button>
             </div>
         </form>

@@ -5,26 +5,38 @@ namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Models\SchoolClass;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class TeacherController extends Controller
 {
+    /**
+     * Display a listing of teachers.
+     */
     public function index(): View
     {
-        $teachers = Teacher::with('subject')
+        $teachers = Teacher::with(['subject', 'homeroomClasses'])
             ->where('archived', false)
             ->latest('teacher_id')
-            ->paginate(10);
+            ->get();
+
+        if (Auth::user()->role === 'teacher') {
+            $teachers->each(fn (Teacher $item) => $item->makeHidden(['nip']));
+        }
 
         return view('teachers.index', compact('teachers'));
     }
 
+    /**
+     * Show the form for creating a new teacher.
+     */
     public function create(): View
     {
         $subjects = Subject::where('archived', false)
@@ -34,14 +46,41 @@ class TeacherController extends Controller
         return view('teachers.create', compact('subjects'));
     }
 
+    /**
+     * Store a newly created teacher.
+     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'username' => ['required', 'string', 'max:50', 'unique:tbl_users,username'],
-            'email' => ['required', 'email', 'max:100', 'unique:tbl_users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'full_name' => ['required', 'string', 'max:100'],
-            'nip' => ['required', 'string', 'max:30', 'unique:tbl_teachers,nip'],
+            'username' => [
+                'required',
+                'string',
+                'max:50',
+                'unique:tbl_users,username',
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:100',
+                'unique:tbl_users,email',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
+            'full_name' => [
+                'required',
+                'string',
+                'max:100',
+            ],
+            'nip' => [
+                'required',
+                'string',
+                'max:30',
+                'unique:tbl_teachers,nip',
+            ],
             'subject_id' => [
                 'required',
                 Rule::exists('tbl_subjects', 'subject_id')
@@ -78,15 +117,25 @@ class TeacherController extends Controller
             ->with('success', 'Teacher created successfully.');
     }
 
+    /**
+     * Display the specified teacher.
+     */
     public function show(Teacher $teacher): View
     {
         $this->ensureActive($teacher);
 
-        $teacher->load(['subject', 'user', 'homeroomClass']);
+        $teacher->load(['subject', 'user', 'homeroomClasses']);
+
+        if (Auth::user()->role === 'teacher' && Auth::user()->teacher?->teacher_id !== $teacher->teacher_id) {
+            $teacher->makeHidden(['nip']);
+        }
 
         return view('teachers.show', compact('teacher'));
     }
 
+    /**
+     * Show the form for editing the specified teacher.
+     */
     public function edit(Teacher $teacher): View
     {
         $this->ensureActive($teacher);
@@ -100,8 +149,13 @@ class TeacherController extends Controller
         return view('teachers.edit', compact('teacher', 'subjects'));
     }
 
-    public function update(Request $request, Teacher $teacher): RedirectResponse
-    {
+    /**
+     * Update the specified teacher.
+     */
+    public function update(
+        Request $request,
+        Teacher $teacher
+    ): RedirectResponse {
         $this->ensureActive($teacher);
 
         $teacher->load('user');
@@ -121,8 +175,17 @@ class TeacherController extends Controller
                 Rule::unique('tbl_users', 'email')
                     ->ignore($teacher->user->user_id, 'user_id'),
             ],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'full_name' => ['required', 'string', 'max:100'],
+            'password' => [
+                'nullable',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
+            'full_name' => [
+                'required',
+                'string',
+                'max:100',
+            ],
             'nip' => [
                 'required',
                 'string',
@@ -161,20 +224,65 @@ class TeacherController extends Controller
             ->with('success', 'Teacher updated successfully.');
     }
 
+    /**
+     * Archive the specified teacher.
+     *
+     * The teacher's subject will also be archived
+     * when it is no longer used by another active teacher.
+     */
     public function destroy(Teacher $teacher): RedirectResponse
     {
         $this->ensureActive($teacher);
 
         DB::transaction(function () use ($teacher) {
-            $teacher->update(['archived' => true]);
-            $teacher->user->update(['archived' => true]);
+            $subject = $teacher->subject;
+
+            // Lepaskan teacher dari kelas yang menggunakan
+            // teacher tersebut sebagai wali kelas.
+            SchoolClass::where('homeroom_teacher_id', $teacher->teacher_id)
+                ->update([
+                    'homeroom_teacher_id' => null,
+                ]);
+
+            // Archive teacher.
+            $teacher->update([
+                'archived' => true,
+            ]);
+
+            // Archive teacher's user account.
+            $teacher->user->update([
+                'archived' => true,
+            ]);
+
+            // Archive subject jika sudah tidak digunakan
+            // oleh teacher aktif lainnya.
+            if ($subject) {
+                $activeTeacherCount = Teacher::where(
+                    'subject_id',
+                    $subject->subject_id
+                )
+                    ->where('archived', false)
+                    ->count();
+
+                if ($activeTeacherCount === 0) {
+                    $subject->update([
+                        'archived' => true,
+                    ]);
+                }
+            }
         });
 
         return redirect()
             ->route('teachers.index')
-            ->with('success', 'Teacher archived successfully.');
+            ->with(
+                'success',
+                'Guru dan data terkait berhasil diarsipkan.'
+            );
     }
 
+    /**
+     * Ensure the teacher is still active.
+     */
     private function ensureActive(Teacher $teacher): void
     {
         abort_if($teacher->archived, 404);

@@ -21,6 +21,7 @@ class User extends Authenticatable
         'password',
         'role',
         'archived',
+        'first_login_at',
     ];
 
     protected $hidden = [
@@ -33,7 +34,17 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
             'archived' => 'boolean',
+            'first_login_at' => 'datetime',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (User $user): void {
+            if ($user->role === 'admin') {
+                throw new \RuntimeException('Akun admin dilindungi dan tidak dapat dihapus.');
+            }
+        });
     }
 
     public function student(): HasOne

@@ -25,7 +25,7 @@ class SubjectFactory extends Factory
                 'Physical Education',
             ]),
             'subject_code' => fake()->unique()->regexify('[A-Z]{3}[0-9]{3}'),
-            'credits' => fake()->numberBetween(2, 4),
+            'jp' => fake()->numberBetween(2, 4),
             'archived' => false,
         ];
     }

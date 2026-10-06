@@ -23,29 +23,29 @@ class SchoolDataSeeder extends Seeder
 
         $subjectsData = [
             [
-                'subject_name' => 'Mathematics',
+                'subject_name' => 'Matematika',
                 'subject_code' => 'MAT101',
-                'credits' => 4,
+                'jp' => 4,
             ],
             [
-                'subject_name' => 'English',
+                'subject_name' => 'Bahasa Inggris',
                 'subject_code' => 'ENG101',
-                'credits' => 3,
+                'jp' => 3,
             ],
             [
-                'subject_name' => 'Science',
+                'subject_name' => 'Ilmu Pengetahuan Alam',
                 'subject_code' => 'SCI101',
-                'credits' => 4,
+                'jp' => 4,
             ],
             [
-                'subject_name' => 'Computer Science',
+                'subject_name' => 'Computer Ilmu Pengetahuan Alam',
                 'subject_code' => 'CSC101',
-                'credits' => 3,
+                'jp' => 3,
             ],
             [
-                'subject_name' => 'Indonesian Language',
+                'subject_name' => 'Bahasa Indonesia',
                 'subject_code' => 'IND101',
-                'credits' => 3,
+                'jp' => 3,
             ],
         ];
 
@@ -58,7 +58,7 @@ class SchoolDataSeeder extends Seeder
                 ],
                 [
                     'subject_name' => $subjectData['subject_name'],
-                    'credits' => $subjectData['credits'],
+                    'jp' => $subjectData['jp'],
                     'archived' => false,
                 ]
             );
@@ -155,17 +155,17 @@ class SchoolDataSeeder extends Seeder
 
         $classesData = [
             [
-                'class_name' => 'Grade 10 A',
+                'class_name' => '10 A',
                 'homeroom_teacher_id' => $teachers[0]->teacher_id,
                 'academic_year' => '2026/2027',
             ],
             [
-                'class_name' => 'Grade 10 B',
+                'class_name' => '10 B',
                 'homeroom_teacher_id' => $teachers[1]->teacher_id,
                 'academic_year' => '2026/2027',
             ],
             [
-                'class_name' => 'Grade 11 A',
+                'class_name' => '11 A',
                 'homeroom_teacher_id' => $teachers[2]->teacher_id,
                 'academic_year' => '2026/2027',
             ],
@@ -357,5 +357,20 @@ class SchoolDataSeeder extends Seeder
 
             $student->save();
         }
+        /* Jadwal contoh */
+        $scheduleRows = [
+            [$classes[0]->class_id, $teachers[0]->teacher_id, $subjects[0]->subject_id, 'Senin', '07:00', '08:30', 2],
+            [$classes[0]->class_id, $teachers[1]->teacher_id, $subjects[1]->subject_id, 'Selasa', '08:30', '10:00', 2],
+            [$classes[1]->class_id, $teachers[2]->teacher_id, $subjects[2]->subject_id, 'Rabu', '07:00', '08:30', 2],
+            [$classes[1]->class_id, $teachers[3]->teacher_id, $subjects[3]->subject_id, 'Kamis', '08:30', '10:00', 2],
+            [$classes[2]->class_id, $teachers[4]->teacher_id, $subjects[4]->subject_id, 'Jumat', '07:00', '08:30', 2],
+        ];
+        foreach ($scheduleRows as [$classId, $teacherId, $subjectId, $day, $start, $end, $jp]) {
+            \App\Models\Schedule::updateOrCreate(
+                ['class_id' => $classId, 'teacher_id' => $teacherId, 'subject_id' => $subjectId, 'day' => $day, 'start_time' => $start],
+                ['end_time' => $end, 'jp' => $jp, 'archived' => false]
+            );
+        }
+
     }
 }

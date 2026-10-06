@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            {{-- Students --}}
+            {{-- Siswa --}}
             <div class="col-xl col-md-6 mb-4">
                 <div class="dashboard-stat-card border-start border-4 border-primary">
                     <div class="stat-content">
@@ -43,7 +43,7 @@
 
                         <div>
                             <h3 class="stat-number">{{ $studentCount }}</h3>
-                            <p class="stat-label">Siswa (Students)</p>
+                            <p class="stat-label">Siswa</p>
                         </div>
                     </div>
 
@@ -64,7 +64,7 @@
 
                         <div>
                             <h3 class="stat-number">{{ $teacherCount }}</h3>
-                            <p class="stat-label">Guru (Teachers)</p>
+                            <p class="stat-label">Guru</p>
                         </div>
                     </div>
 
@@ -75,7 +75,7 @@
                 </div>
             </div>
 
-            {{-- Classes --}}
+            {{-- Kelases --}}
             <div class="col-xl col-md-6 mb-4">
                 <div class="dashboard-stat-card border-start border-4 border-warning">
                     <div class="stat-content">
@@ -85,7 +85,7 @@
 
                         <div>
                             <h3 class="stat-number">{{ $classCount }}</h3>
-                            <p class="stat-label">Kelas (Classes)</p>
+                            <p class="stat-label">Kelas</p>
                         </div>
                     </div>
 
@@ -106,7 +106,7 @@
 
                         <div>
                             <h3 class="stat-number">{{ $subjectCount }}</h3>
-                            <p class="stat-label">Mapel (Subjects)</p>
+                            <p class="stat-label">Mapel</p>
                         </div>
                     </div>
 
@@ -119,7 +119,7 @@
 
         </div>
 
-        {{-- Recent Students --}}
+        {{-- Recent Siswa --}}
         <div class="card border-0 shadow-sm">
             <div class="card-header">
                 <h3 class="card-title">
@@ -134,8 +134,8 @@
                 </div>
             </div>
 
-            <div class="card-body table-responsive p-0">
-                <table class="table table-hover align-middle mb-0">
+            <div class="card-body datatable-container">
+                <table id="recentSiswaTable" class="table table-hover align-middle mb-0">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -184,35 +184,52 @@
     @elseif (Auth::user()->role === 'teacher')
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Welcome, Teacher</h3>
+                <h3 class="card-title">Dashboard Guru</h3>
             </div>
 
             <div class="card-body">
-                Welcome to the <strong>School Management System</strong>.
-                You are logged in as a <strong>Teacher</strong>.
+                @php($teacherGreeting = session('teacher_greeting'))
+                @if ($teacherGreeting)
+                    <div class="alert alert-primary border-0 shadow-sm mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="fs-3"><i class="bi bi-hand-wave"></i></div>
+                            <div>
+                                <h5 class="mb-1">
+                                    {{ $teacherGreeting['type'] === 'new' ? 'Selamat datang' : 'Selamat datang kembali' }}, {{ $teacherGreeting['name'] }}
+                                </h5>
+                                <p class="mb-0 text-body-secondary">Selamat bekerja dan semoga aktivitas mengajar hari ini berjalan lancar.</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <div class="row g-3">
+                    <div class="col-md-6"><div class="small-box text-bg-primary"><div class="inner"><h3>{{ $teacherStudentCount ?? 0 }}</h3><p>Jumlah Siswa yang Diampu</p></div><div class="small-box-icon"><i class="bi bi-people"></i></div><a href="{{ route('students.index') }}" class="small-box-footer">Lihat Data Siswa <i class="bi bi-arrow-right"></i></a></div></div>
+                    <div class="col-md-6"><div class="small-box text-bg-success"><div class="inner"><h3>{{ $teacherScheduleCount ?? 0 }}</h3><p>Jumlah Jadwal Mengajar</p></div><div class="small-box-icon"><i class="bi bi-calendar-week"></i></div><a href="{{ route('schedules.index') }}" class="small-box-footer">Lihat Jadwal <i class="bi bi-arrow-right"></i></a></div></div>
+                </div>
             </div>
         </div>
     @elseif (Auth::user()->role === 'student')
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Welcome, Student</h3>
+                <h3 class="card-title">Dashboard Siswa</h3>
             </div>
 
             <div class="card-body">
                 <p>
-                    Welcome to the <strong>School Management System</strong>.
-                    You are logged in as a <strong>Student</strong>.
+                    Selamat datang di <strong>Rungsek</strong>.
+                    Anda masuk sebagai <strong>Siswa</strong>.
                 </p>
 
                 @if ($student)
                     <hr>
 
-                    <h5>My Student Information</h5>
+                    <h5>Informasi Siswa Saya</h5>
 
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <tr>
-                                <th width="30%">Full Name</th>
+                                <th width="30%">Nama Lengkap</th>
                                 <td>{{ $student->full_name }}</td>
                             </tr>
                             <tr>
@@ -220,11 +237,11 @@
                                 <td>{{ $student->nis }}</td>
                             </tr>
                             <tr>
-                                <th>Class</th>
+                                <th>Kelas</th>
                                 <td>{{ $student->schoolClass->class_name ?? '-' }}</td>
                             </tr>
                             <tr>
-                                <th>Date of Birth</th>
+                                <th>Tanggal Lahir</th>
                                 <td>
                                     {{ $student->date_of_birth ? $student->date_of_birth->locale('id')->translatedFormat('j M Y') : '-' }}
                                 </td>
@@ -235,13 +252,17 @@
                     <hr>
 
                     <div class="alert alert-info mb-0">
-                        Your student profile has not been created yet.
-                        Please contact the administrator.
+                        Profil siswa Anda belum dibuat.
+                        Silakan hubungi administrator.
                     </div>
                 @endif
             </div>
         </div>
 
     @endif
+
+@push('scripts')
+<script>document.addEventListener('DOMContentLoaded', function () { const t = document.querySelector('#recentSiswaTable'); if (t) new DataTable(t, { paging: false, searching: false, info: false, ordering: false, language: { zeroRecords: 'Data tidak ditemukan' } }); });</script>
+@endpush
 
 @endsection

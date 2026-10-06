@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Detail Guru (Teacher Details)')
+@section('title', 'Detail Guru')
 
-@section('page-title', 'Detail Guru (Teacher Details)')
+@section('page-title', 'Detail Guru')
 
 @section('breadcrumb-parent')
-    <a href="{{ route('teachers.index') }}">Guru (Teachers)</a>
+    <a href="{{ route('teachers.index') }}">Guru</a>
 @endsection
 
 @section('breadcrumb', $teacher->full_name)
@@ -15,21 +15,22 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
-                Informasi Guru (Teacher Information)
+                Informasi Guru
             </h3>
         </div>
 
         <div class="card-body">
             <div class="row">
 
-                {{-- Full Name --}}
+                {{-- Nama Lengkap --}}
                 <div class="col-md-6 mb-3">
-                    <strong>Nama Lengkap (Full Name)</strong>
+                    <strong>Nama Lengkap</strong>
                     <p class="mb-0">
                         {{ $teacher->full_name }}
                     </p>
                 </div>
 
+                @if (auth()->user()->role === 'admin' || auth()->user()->teacher?->teacher_id === $teacher->teacher_id)
                 {{-- NIP --}}
                 <div class="col-md-6 mb-3">
                     <strong>NIP</strong>
@@ -37,6 +38,8 @@
                         {{ $teacher->nip }}
                     </p>
                 </div>
+
+                @endif
 
                 {{-- Username --}}
                 <div class="col-md-6 mb-3">
@@ -56,17 +59,27 @@
 
                 {{-- Subject --}}
                 <div class="col-md-6 mb-3">
-                    <strong>Mata Pelajaran (Subject)</strong>
+                    <strong>Mata Pelajaran</strong>
                     <p class="mb-0">
                         {{ $teacher->subject->subject_name ?? '-' }}
                     </p>
                 </div>
 
-                {{-- Homeroom Class --}}
+                {{-- Berandaroom Kelas --}}
                 <div class="col-md-6 mb-3">
-                    <strong>Wali Kelas (Homeroom Class)</strong>
+                    <strong>Wali Kelas</strong>
                     <p class="mb-0">
-                        {{ $teacher->homeroomClass->class_name ?? '-' }}
+                        @if ($teacher->homeroomClasses->isNotEmpty())
+                            <div class="d-flex flex-wrap gap-2">
+                                @foreach ($teacher->homeroomClasses as $class)
+                                    <a href="{{ route('classes.show', $class) }}" class="badge text-bg-light border text-decoration-none">
+                                        {{ $class->class_name }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        @else
+                            <span class="text-muted">Bukan wali kelas</span>
+                        @endif
                     </p>
                 </div>
 
@@ -76,13 +89,13 @@
         <div class="card-footer">
             <a href="{{ route('teachers.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left me-1"></i>
-                Kembali (Back)
+                Kembali
             </a>
 
             @if (auth()->user()->role === 'admin')
                 <a href="{{ route('teachers.edit', $teacher) }}" class="btn btn-warning">
                     <i class="bi bi-pencil me-1"></i>
-                    Edit Guru (Edit Teacher)
+                    Ubah Guru
                 </a>
             @endif
         </div>

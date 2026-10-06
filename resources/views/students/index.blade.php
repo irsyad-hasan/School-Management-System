@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'Siswa (Students)')
-@section('page-title', 'Siswa (Students)')
-@section('breadcrumb', 'Siswa (Students)')
+@section('title', 'Siswa')
+@section('page-title', 'Siswa')
+@section('breadcrumb', 'Siswa')
 
 @section('content')
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Daftar Siswa (Student List)</h3>
+            <h3 class="card-title">Daftar Siswa</h3>
 
             <div class="card-tools">
                 @if (auth()->user()->role === 'admin')
@@ -20,16 +20,16 @@
             </div>
         </div>
 
-        <div class="card-body table-responsive p-0">
-            <table class="table table-hover align-middle mb-0">
+        <div class="card-body datatable-container">
+            <table id="studentsTable" class="display table table-hover align-middle mb-0">
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>Nama Lengkap (Full Name)</th>
+                        <th>Nama Lengkap</th>
                         <th class="text-end">NIS</th>
-                        <th>Kelas (Class)</th>
-                        <th>Tanggal Lahir (Date of Birth)</th>
-                        <th class="text-end">Aksi (Actions)</th>
+                        <th>Kelas</th>
+                        <th>Tanggal Lahir</th>
+                        <th class="text-end">Detail</th>
                     </tr>
                 </thead>
 
@@ -37,7 +37,7 @@
                     @forelse ($students as $student)
                         <tr>
                             <td>
-                                {{ $students->firstItem() + $loop->index }}
+                                {{ $loop->iteration }}
                             </td>
 
                             <td>{{ $student->full_name }}</td>
@@ -59,7 +59,7 @@
                                     </a>
 
                                     <form action="{{ route('students.destroy', $student) }}" method="POST" class="d-inline"
-                                        onsubmit="return confirm('Are you sure you want to archive this student?');">
+                                        onsubmit="return confirm('Apakah Anda yakin ingin mengarsipkan siswa ini?');">
                                         @csrf
                                         @method('DELETE')
 
@@ -81,11 +81,13 @@
             </table>
         </div>
 
-        @if ($students->hasPages())
-            <div class="card-footer">
-                {{ $students->links() }}
-            </div>
-        @endif
     </div>
 
 @endsection
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initDataTable('#studentsTable');
+        });
+    </script>
+@endpush

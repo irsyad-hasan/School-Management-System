@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id('subject_id');
             $table->string('subject_name', 100);
             $table->string('subject_code', 20)->unique();
-            $table->unsignedInteger('credits');
+            $table->unsignedInteger('jp');
             $table->boolean('archived')->default(false);
             $table->timestamps();
         });

@@ -64,3 +64,17 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Revisi 6 Oktober 2026
+
+Perubahan utama pada versi ini:
+- penambahan modul jadwal pelajaran dan relasi guru, kelas, serta mata pelajaran;
+- dashboard guru menampilkan jumlah siswa yang diampu dan jumlah jadwal mengajar;
+- SKS diganti menjadi JP (Jam Pelajaran);
+- pembatasan NIP agar guru tidak melihat NIP guru lain;
+- DataTables ditambahkan pada tabel data utama dan tabel detail;
+- istilah antarmuka utama diseragamkan ke Bahasa Indonesia;
+- manajemen pengguna admin melarang penghapusan akun admin;
+- kolom tindakan menggunakan label Detail.
+
+Setelah menyalin proyek ke komputer, jalankan `composer install` bila folder `vendor` tidak ada, lalu `php artisan migrate`. Untuk data contoh terbaru, jalankan `php artisan db:seed`.

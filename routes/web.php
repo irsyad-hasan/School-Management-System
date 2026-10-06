@@ -5,15 +5,17 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\ActivityLogController;
 use App\Models\SchoolClass;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\Schedule;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/login');
 
 Route::get('/dashboard', function () {
     $user = \Illuminate\Support\Facades\Auth::user();
@@ -25,6 +27,8 @@ Route::get('/dashboard', function () {
     $subjectCount = null;
     $student = null;
     $recentStudents = collect();
+    $teacherStudentCount = null;
+    $teacherScheduleCount = null;
 
     if ($user->role === 'admin') {
         $userCount = \App\Models\User::where('archived', false)->count();
@@ -37,6 +41,14 @@ Route::get('/dashboard', function () {
             ->latest('student_id')
             ->take(5)
             ->get();
+    }
+
+    if ($user->role === 'teacher') {
+        $teacher = $user->teacher;
+        $teacherStudentCount = $teacher
+            ? Student::whereIn('class_id', Schedule::where('teacher_id', $teacher->teacher_id)->where('archived', false)->pluck('class_id')->unique())->where('archived', false)->count()
+            : 0;
+        $teacherScheduleCount = $teacher ? Schedule::where('teacher_id', $teacher->teacher_id)->where('archived', false)->count() : 0;
     }
 
     if ($user->role === 'student') {
@@ -54,7 +66,9 @@ Route::get('/dashboard', function () {
         'classCount',
         'subjectCount',
         'student',
-        'recentStudents'
+        'recentStudents',
+        'teacherStudentCount',
+        'teacherScheduleCount'
     ));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -157,6 +171,25 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/subjects/{subject}', [SubjectController::class, 'show'])
             ->name('subjects.show');
+    });
+
+    Route::middleware('role:admin,teacher')->group(function () {
+        Route::get('/schedules', [ScheduleController::class, 'index'])->name('schedules.index');
+    });
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/schedules/create', [ScheduleController::class, 'create'])->name('schedules.create');
+        Route::post('/schedules', [ScheduleController::class, 'store'])->name('schedules.store');
+        Route::get('/schedules/{schedule}/edit', [ScheduleController::class, 'edit'])->name('schedules.edit');
+        Route::put('/schedules/{schedule}', [ScheduleController::class, 'update'])->name('schedules.update');
+        Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
+        Route::get('/pengguna', [UserManagementController::class, 'index'])->name('users.index');
+        Route::get('/log-aktivitas', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+        Route::delete('/pengguna/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
+    });
+
+    Route::middleware('role:admin,teacher')->group(function () {
+        Route::get('/schedules/{schedule}', [ScheduleController::class, 'show'])->name('schedules.show');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -1,9 +1,9 @@
 <section>
 
     <div class="mb-4">
-        <h5 class="mb-1">Profile Information</h5>
+        <h5 class="mb-1">Informasi Profil</h5>
         <p class="text-muted mb-0">
-            Update your username and email address.
+            Perbarui nama pengguna dan alamat email Anda.
         </p>
     </div>
 
@@ -53,7 +53,7 @@
             @if (session('status') === 'profile-updated')
                 <span class="text-success">
                     <i class="bi bi-check-circle me-1"></i>
-                    Profile updated successfully.
+                    Profil berhasil diperbarui.
                 </span>
             @endif
         </div>

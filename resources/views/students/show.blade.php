@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 
-@section('title', 'Detail Siswa (Student Details)')
-@section('page-title', 'Detail Siswa (Student Details)')
+@section('title', 'Detail Siswa')
+@section('page-title', 'Detail Siswa')
 @section('breadcrumb-parent')
-    <a href="{{ route('students.index') }}">Students</a>
+    <a href="{{ route('students.index') }}">Siswa</a>
 @endsection
 
 @section('breadcrumb', $student->full_name)
@@ -12,14 +12,14 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Informasi Siswa (Student Information)</h3>
+            <h3 class="card-title">Informasi Siswa</h3>
         </div>
 
         <div class="card-body">
             <div class="row">
 
                 <div class="col-md-6 mb-3">
-                    <strong>Nama Lengkap (Full Name)</strong>
+                    <strong>Nama Lengkap</strong>
                     <div class="mt-1">
                         {{ $student->full_name }}
                     </div>
@@ -33,14 +33,14 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <strong>Kelas (Class)</strong>
+                    <strong>Kelas</strong>
                     <div class="mt-1">
                         {{ $student->schoolClass->class_name ?? '-' }}
                     </div>
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <strong>Tanggal Lahir (Date of Birth)</strong>
+                    <strong>Tanggal Lahir (Tanggal Lahir)</strong>
                     <div class="mt-1">
                         {{ $student->date_of_birth->locale('id')->translatedFormat('j M Y') }}
                     </div>
@@ -50,7 +50,7 @@
 
             <hr>
 
-            <h5 class="mb-3">Akun Login (Login Account)</h5>
+            <h5 class="mb-3">Akun Login</h5>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
@@ -72,13 +72,13 @@
         <div class="card-footer">
             <a href="{{ route('students.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i>
-                Kembali (Back)
+                Kembali
             </a>
 
             @if (Auth::user()->role === 'admin')
                 <a href="{{ route('students.edit', $student) }}" class="btn btn-warning">
                     <i class="bi bi-pencil"></i>
-                    Edit Siswa (Edit Student)
+                    Ubah Siswa
                 </a>
             @endif
         </div>

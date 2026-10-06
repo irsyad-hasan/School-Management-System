@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Mata Pelajaran (Edit Subject)')
+@section('title', 'Ubah Mata Pelajaran (Ubah Mata Pelajaran)')
 
-@section('page-title', 'Edit Mata Pelajaran (Edit Subject)')
+@section('page-title', 'Ubah Mata Pelajaran (Ubah Mata Pelajaran)')
 
 @section('breadcrumb-parent')
-    <a href="{{ route('subjects.index') }}">Mata Pelajaran (Subjects)</a>
+    <a href="{{ route('subjects.index') }}">Mata Pelajaran</a>
 @endsection
 
 @section('breadcrumb', $subject->subject_name)
@@ -15,7 +15,7 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
-                Informasi Mata Pelajaran (Subject Information)
+                Informasi Mata Pelajaran
             </h3>
         </div>
 
@@ -25,10 +25,10 @@
 
             <div class="card-body">
 
-                {{-- Subject Name --}}
+                {{-- Mata Pelajaran Name --}}
                 <div class="mb-3">
                     <label for="subject_name" class="form-label">
-                        Nama Mata Pelajaran (Subject Name)
+                        Nama Mata Pelajaran
                         <span class="text-danger">*</span>
                     </label>
 
@@ -44,10 +44,10 @@
                     @enderror
                 </div>
 
-                {{-- Subject Code --}}
+                {{-- Mata Pelajaran Code --}}
                 <div class="mb-3">
                     <label for="subject_code" class="form-label">
-                        Kode Mata Pelajaran (Subject Code)
+                        Kode Mata Pelajaran
                         <span class="text-danger">*</span>
                     </label>
 
@@ -62,19 +62,19 @@
                     @enderror
                 </div>
 
-                {{-- Credits --}}
+                {{-- JP --}}
                 <div class="mb-3">
-                    <label for="credits" class="form-label">
-                        SKS (Credits)
+                    <label for="jp" class="form-label">
+                        Jam Pelajaran (JP)
                         <span class="text-danger">*</span>
                     </label>
 
-                    <input type="number" name="credits" id="credits"
-                        class="form-control @error('credits') is-invalid @enderror"
-                        value="{{ old('credits', $subject->credits) }}" placeholder="Masukkan jumlah SKS" min="1"
+                    <input type="number" name="jp" id="jp"
+                        class="form-control @error('jp') is-invalid @enderror"
+                        value="{{ old('jp', $subject->jp) }}" placeholder="Masukkan jumlah JP" min="1"
                         max="20" required>
 
-                    @error('credits')
+                    @error('jp')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
@@ -86,12 +86,12 @@
             <div class="card-footer">
                 <a href="{{ route('subjects.index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left me-1"></i>
-                    Kembali (Back)
+                    Kembali
                 </a>
 
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-save me-1"></i>
-                    Perbarui Mata Pelajaran (Update Subject)
+                    Perbarui Mata Pelajaran (Perbarui Mata Pelajaran)
                 </button>
             </div>
         </form>

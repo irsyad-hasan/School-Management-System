@@ -17,14 +17,14 @@ class Subject extends Model
     protected $fillable = [
         'subject_name',
         'subject_code',
-        'credits',
+        'jp',
         'archived',
     ];
 
     protected function casts(): array
     {
         return [
-            'credits' => 'integer',
+            'jp' => 'integer',
             'archived' => 'boolean',
         ];
     }
@@ -37,5 +37,10 @@ class Subject extends Model
     public function teachers(): HasMany
     {
         return $this->hasMany(Teacher::class, 'subject_id', 'subject_id');
+    }
+
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class, 'subject_id', 'subject_id');
     }
 }

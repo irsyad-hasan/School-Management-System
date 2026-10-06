@@ -1,21 +1,21 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Kelas (Add Class)')
+@section('title', 'Tambah Kelas')
 
-@section('page-title', 'Tambah Kelas (Add Class)')
+@section('page-title', 'Tambah Kelas')
 
 @section('breadcrumb-parent')
-    <a href="{{ route('classes.index') }}">Kelas (Classes)</a>
+    <a href="{{ route('classes.index') }}">Kelas</a>
 @endsection
 
-@section('breadcrumb', 'Tambah Kelas (Add Class)')
+@section('breadcrumb', 'Tambah Kelas')
 
 @section('content')
 
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
-                Informasi Kelas (Class Information)
+                Informasi Kelas
             </h3>
         </div>
 
@@ -24,10 +24,10 @@
 
             <div class="card-body">
 
-                {{-- Class Name --}}
+                {{-- Kelas Name --}}
                 <div class="mb-3">
                     <label for="class_name" class="form-label">
-                        Nama Kelas (Class Name)
+                        Nama Kelas
                         <span class="text-danger">*</span>
                     </label>
 
@@ -42,10 +42,10 @@
                     @enderror
                 </div>
 
-                {{-- Homeroom Teacher --}}
+                {{-- Berandaroom Teacher --}}
                 <div class="mb-3">
                     <label for="homeroom_teacher_id" class="form-label">
-                        Wali Kelas (Homeroom Teacher)
+                        Wali Kelas
                     </label>
 
                     <select name="homeroom_teacher_id" id="homeroom_teacher_id"
@@ -74,7 +74,7 @@
                 {{-- Academic Year --}}
                 <div class="mb-3">
                     <label for="academic_year" class="form-label">
-                        Tahun Ajaran (Academic Year)
+                        Tahun Ajaran
                         <span class="text-danger">*</span>
                     </label>
 
@@ -94,12 +94,12 @@
             <div class="card-footer">
                 <a href="{{ route('classes.index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left me-1"></i>
-                    Kembali (Back)
+                    Kembali
                 </a>
 
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-save me-1"></i>
-                    Simpan Kelas (Save Class)
+                    Simpan Kelas
                 </button>
             </div>
         </form>
